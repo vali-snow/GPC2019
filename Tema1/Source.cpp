@@ -11,13 +11,13 @@
 unsigned char prevKey;
 
 void Display1() {
-	glColor3f(0.2, 0.15, 0.88); // albastru
+	glColor3f((GLfloat)0.2, (GLfloat)0.15, (GLfloat)0.88); // albastru
 	glBegin(GL_LINES); // trasarea unei linii
 	glVertex2i(1, 1); // coordonatele unui varf
 	glVertex2i(-1, -1);
 	glEnd();
 
-	glColor3f(1, 0.1, 0.1); // rosu
+	glColor3f((GLfloat)1, (GLfloat)0.1, (GLfloat)0.1); // rosu
 	glBegin(GL_LINES);
 	glVertex2i(-1, 1);
 	glVertex2i(1, -1);
@@ -27,7 +27,7 @@ void Display1() {
 }
 
 void Display2() {
-	glColor3f(1, 0.1, 0.1); // rosu
+	glColor3f((GLfloat)1, (GLfloat)0.1, (GLfloat)0.1); // rosu
 	glBegin(GL_LINES);
 	glVertex2f(1.0, 1.0);
 	glVertex2f(0.9, 0.9);
