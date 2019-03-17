@@ -284,6 +284,7 @@ void Display9() {
 		GLfloat y = r1 * (GLfloat)sin(t) / ymax;
 		glVertex2f(x, y);
 	}
+	glColor3f(0.1f, 1, 0.1f);
 	for (GLfloat t = pi / 4 - ratio; t > - pi / 4; t -= ratio) {
 		GLfloat r2 = (-a) * (GLfloat)sqrt(2 * cos(2 * t));
 		GLfloat x = r2 * (GLfloat)cos(t) / xmax;
