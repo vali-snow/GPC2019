@@ -151,7 +151,7 @@ public:
 			{
 				glColor3f(1.0, 0.1, 0.1);
 			}
-			else if (i <10)
+			else if (i < 10)
 			{
 				glColor3f(0.1, 1.0, 0.1);
 			}
@@ -565,6 +565,66 @@ public:
 		curbaHilbert(lungime, nivel, p, v, 1);
 	}
 };
+
+class CArbore42 {
+public:
+	void arbore42(double lungime,
+		int nivel,
+		double factordiviziune,
+		CPunct p,
+		CVector v)
+	{
+		assert(factordiviziune != 0);
+		CPunct p1, p2;
+		if (nivel == 0)
+		{
+		}
+		else
+		{
+			v.rotatie(-45);
+			v.deseneaza(p, lungime);
+			p1 = v.getDest(p, lungime);
+			arbore42(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+			v.rotatie(90);
+			v.deseneaza(p, lungime);
+			p1 = v.getDest(p, lungime);
+			p2 = p1;
+
+			v.rotatie(+15);
+			v.deseneaza(p1, lungime);
+			p1 = v.getDest(p1, lungime);
+			arbore42(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+			p1 = p2;
+			v.rotatie(-60);
+			v.deseneaza(p1, lungime);
+			p1 = v.getDest(p1, lungime);
+			p2 = p1;
+
+			v.rotatie(+30);
+			v.deseneaza(p1, lungime / 2);
+			p1 = v.getDest(p1, lungime / 2);
+			arbore42(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+			p1 = p2;
+			v.rotatie(-120);
+			v.deseneaza(p1, lungime / 2);
+			p1 = v.getDest(p1, lungime / 2);
+			arbore42(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+		}
+	}
+
+	void afisare(double lungime, int nivel)
+	{
+		CVector v(0.0, -1.0);
+		CPunct p(0.0, 1.0);
+
+		v.deseneaza(p, 0.25);
+		p = v.getDest(p, 0.25);
+		arbore42(lungime, nivel, 0.4, p, v);
+	}
+};
 #pragma endregion Arbori Si Curbe
 
 //Multimea Mandelbrot
@@ -688,7 +748,7 @@ void Display5() {
 
 	glPushMatrix();
 	glLoadIdentity();
-	glScaled(0.4, 0.4, 1);
+	glScaled(0.4, 0.4, 0.4);
 	glTranslated(-0.5, -0.5, 0.0);
 	cap.afisare(1, nivel);
 	glPopMatrix();
@@ -730,6 +790,44 @@ void Display6() {
 	nivel++;
 }
 
+
+// 4.2 arbore bizar
+void Display8() {
+	CArbore42 ca42;
+
+
+	char c[3];
+	sprintf(c, "%2d", nivel);
+	glRasterPos2d(-0.90, -0.90);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+
+	glRasterPos2d(-0.90, 0.90);
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'o');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '4');
+	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '2');
+
+	glPushMatrix();
+	glLoadIdentity();
+	glScaled(0.4, 0.4, 1);
+	glTranslated(-0.6, 0.77, 0.0);
+	ca42.afisare(1, nivel);
+	glPopMatrix();
+
+	nivel++;
+}
 void Init(void) {
 
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -771,6 +869,10 @@ void Display(void) {
 	case '6':
 		glClear(GL_COLOR_BUFFER_BIT);
 		Display6();
+		break;
+	case '8':
+		glClear(GL_COLOR_BUFFER_BIT);
+		Display8();
 		break;
 	default:
 		break;
