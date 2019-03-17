@@ -84,10 +84,11 @@ CComplex operator*(CComplex &c1, CComplex &c2)
 
 class CJuliaFatou {
 public:
-	CJuliaFatou()
+	CJuliaFatou(bool Manderbolt = false, bool Reversed = false)
 	{
 		//     m.c se initializeaza implicit cu 0+0i
-
+		m.manderbolt = Manderbolt;
+		m.reversed = Reversed;
 		m.nriter = NRITER_JF;
 		m.modmax = MODMAX_JF;
 	}
@@ -95,6 +96,8 @@ public:
 	CJuliaFatou(CComplex &c)
 	{
 		m.c = c;
+		m.manderbolt = false;
+		m.reversed = false;
 		m.nriter = NRITER_JF;
 		m.modmax = MODMAX_JF;
 	}
@@ -112,28 +115,55 @@ public:
 	int isIn(CComplex &x)
 	{
 		int rez = 0;
+		int i;
 		//     tablou in care vor fi memorate valorile procesului iterativ z_n+1 = z_n * z_n + c
 		CComplex z0, z1;
 
 		z0 = x;
-		for (int i = 1; i < m.nriter; i++)
+		for (i = 1; i < m.nriter; i++)
 		{
-			z1 = z0 * z0 + m.c;
-			if (z1 == z0)
+			if (m.manderbolt)
 			{
-				//         x nu apartine m.J-F deoarece procesul iterativ converge finit
-				rez = -1;
-				break;
+				z1 = z0 * z0 + x;
 			}
-			else if (z1.getModul() > m.modmax)
+			else
 			{
-				//        x nu apartine m.J-F deoarece procesul iterativ converge la infinit
+				z1 = z0 * z0 + m.c;
+				if (z1 == z0)
+				{
+					// x nu apartine m.J-F deoarece procesul iterativ converge finit
+					rez = -1;
+					break;
+				}
+			}
+			if (z1.getModul() > m.modmax)
+			{
+				// x nu apartine m.J-F deoarece procesul iterativ converge la infinit
 				rez = 1;
 				break;
 			}
 			z0 = z1;
 		}
 
+		if (m.manderbolt && m.reversed)
+		{
+			if (i < 5)
+			{
+				glColor3f(1.0, 0.1, 0.1);
+			}
+			else if (i <10)
+			{
+				glColor3f(0.1, 1.0, 0.1);
+			}
+			else if (i < 15)
+			{
+				glColor3f(0.1, 0.1, 1.0);
+			}
+			else
+			{
+				glColor3f(0.1, 0.1, 0.1);
+			}
+		}
 		return rez;
 	}
 
@@ -152,19 +182,29 @@ public:
 			{
 				CComplex z(x, y);
 				int r = isIn(z);
-				z.print(stdout);
-				if (r == 0)
+				//z.print(stdout);
+				if (m.manderbolt && m.reversed)
 				{
-					fprintf(stdout, "   \n");
-					glVertex3d(x, y, 0);
+					if (r != 0)
+					{
+						glVertex3d(x, y, 0);
+					}
 				}
-				else if (r == -1)
+				else
 				{
-					fprintf(stdout, "   converge finit\n");
-				}
-				else if (r == 1)
-				{
-					fprintf(stdout, "   converge infinit\n");
+					if (r == 0)
+					{
+						//fprintf(stdout, "   \n");
+						glVertex3d(x, y, 0);
+					}
+					else if (r == -1)
+					{
+						//fprintf(stdout, "   converge finit\n");
+					}
+					else if (r == 1)
+					{
+						//fprintf(stdout, "   converge infinit\n");
+					}
 				}
 			}
 		fprintf(stdout, "STOP\n");
@@ -176,10 +216,14 @@ public:
 private:
 	struct SDate {
 		CComplex c;
-		//     nr. de iteratii
+		// nr. de iteratii
 		int nriter;
-		//     modulul maxim
+		// modulul maxim
 		double modmax;
+		// manderbolt flag
+		bool manderbolt;
+		// reversed flag
+		bool reversed;
 	} m;
 };
 #pragma endregion Julia Fatou
@@ -523,25 +567,23 @@ public:
 };
 #pragma endregion Arbori Si Curbe
 
-// multimea Julia-Fatou pentru z0 = 0 si c = -0.12375+0.056805i
+//Multimea Mandelbrot
 void Display1() {
-	CComplex c(-0.12375, 0.056805);
-	CJuliaFatou cjf(c);
+	CJuliaFatou cjf(true, false);
 
 	glColor3f(1.0, 0.1, 0.1);
 	cjf.setnriter(30);
-	cjf.display(-0.8, -0.4, 0.8, 0.4);
+	cjf.display(-2, -2, 2, 2);
 }
 
-// multimea Julia-Fatou pentru z0 = 0 si c = -0.012+0.74i
+//Anti-Multimea Mandelbrot colorata
 void Display2() {
-	CComplex c(-0.012, 0.74);
-	CJuliaFatou cjf(c);
+	CJuliaFatou cjf(true, true);
 
-	glColor3f(1.0, 0.1, 0.1);
 	cjf.setnriter(30);
-	cjf.display(-1, -1, 1, 1);
+	cjf.display(-2, -2, 2, 2);
 }
+
 
 // afisare curba lui Koch "fulg de zapada"
 void Display3() {
