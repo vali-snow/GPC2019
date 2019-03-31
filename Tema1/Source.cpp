@@ -47,7 +47,7 @@ void Display3() {
 	glBegin(GL_POINTS);
 	glVertex2f(-0.5, 0.5);
 	glVertex2f(0.5, 0.5);
-	glVertex2f(0.5, -0.5);
+	//glVertex2f(0.5, -0.5);
 	glVertex2f(-0.5, -0.5);
 	glEnd();
 }
